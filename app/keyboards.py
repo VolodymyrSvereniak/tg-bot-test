@@ -7,7 +7,7 @@ from aiogram.types import (
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.database.requests import get_categories, get_category_item
+from app.database.requests import get_categories, get_category_items
 
 
 # main = ReplyKeyboardMarkup(
@@ -52,12 +52,12 @@ async def categories():
 
 
 async def items(category_id):
-    all_categories = await get_category_item(category_id)
+    category_item = await get_category_items(category_id)
     keyboard = InlineKeyboardBuilder()
 
-    for item in all_categories:
+    for item in category_item:
         keyboard.add(
-            InlineKeyboardButton(text=item.name, callback_data=f"category_{item.id}")
+            InlineKeyboardButton(text=item.name, callback_data=f"item_{item.id}")
         )
     keyboard.add(
         InlineKeyboardButton(text="Back to main page", callback_data="to_main")

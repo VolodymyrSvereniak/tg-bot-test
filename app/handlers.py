@@ -40,10 +40,21 @@ async def category(callback: CallbackQuery):
     )
 
 
+@router.callback_query(F.data.startswith("item_"))
+async def item(callback: CallbackQuery):
+    item_data = await rq.get_item(callback.data.split("_")[1])
+    await callback.answer("You choosed product")
+    await callback.message.answer(
+        f"Name: {item_data.name}\nDescription: {item_data.description}\nPrice: {item_data.price}",
+        reply_markup=await kb.items(callback.data.split("_")[1]),
+    )
+
+
 @router.callback_query(F.data.contains("to_main"))
-async def category(callback: CallbackQuery):
+async def return_home(callback: CallbackQuery):
+    await callback.message.edit_reply_markup(reply_markup=None)
     await callback.answer("Home page")
-    await callback.message.answer("Choose category", reply_markup=kb.main)
+    await callback.message.answer("Choose option", reply_markup=kb.main)
 
 
 # @router.message(Command("help"))
